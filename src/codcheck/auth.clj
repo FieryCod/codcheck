@@ -1,9 +1,11 @@
 (ns codcheck.auth
   (:require
    [codcheck.envs :refer [envs]]
+   [codcheck.github :as github]
    [buddy.core.keys :as buddy-keys]
    [clj-time.core :as clj-time]
-   [buddy.sign.jwt :as jwt])
+   [buddy.sign.jwt :as jwt]
+   [clj-http.client :as client])
   (:import
    [org.apache.commons.codec.digest HmacUtils HmacAlgorithms]))
 
@@ -23,10 +25,15 @@
                 :iss (:github-app-identifier envs)}]
     (jwt/sign claims gh-private-key jwt-algorithm)))
 
-(gh-sign-token)
-
-(gh-installation-token (gh-sign-token))
-
 (defn gh-installation-token
-  [sign-token]
-  ())
+  ([installation-id sign-token]
+   (gh-installation-token installation-id sign-token false))
+
+  ([installation-id sign-token async?]
+   (let [installation-url (github/installation-token-url installation-id)
+         headers {:authorization (str "Bearer " sign-token)}
+         opts {:headers headers
+               :async? async?
+               :accept "application/vnd.github.machine-man-preview+json"
+               :content-type :json}]
+     (client/post installation-url opts))))

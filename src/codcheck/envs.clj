@@ -1,6 +1,8 @@
 (ns codcheck.envs
-  (:require [clojure.walk])
-  (:import [java.util HashMap]))
+  (:require
+   [clojure.walk])
+  (:import
+   [java.util HashMap]))
 
 (defn- read-envs-from-edn
   []

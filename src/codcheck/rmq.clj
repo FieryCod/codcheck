@@ -1,6 +1,8 @@
 (ns codcheck.rmq
-  (:require [langohr.core :as langohr]
-            [codcheck.envs :refer [envs]]))
+  (:require
+   [langohr.core :as langohr]
+   [langohr.channel :as langohr-chan]
+   [codcheck.envs :refer [envs]]))
 
 (def exchanges
   {:gh-pr-code-check "gh_pr_code_check_ex"})
@@ -12,7 +14,11 @@
   {:gh-pr-code-check ""})
 
 (def conn
-  (let [{:keys [rmq-user rmq-pass rmq-host]} envs]
-    (langohr/connect {:host rmq-host
-                      :username rmq-user
-                      :password rmq-pass})))
+  (atom
+   (let [{:keys [rmq-user rmq-pass rmq-host]} envs]
+     (langohr/connect {:host rmq-host
+                       :username rmq-user
+                       :password rmq-pass}))))
+
+(def chan
+  (atom (langohr-chan/open @conn)))
