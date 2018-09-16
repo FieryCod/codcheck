@@ -1,6 +1,8 @@
 (defproject codcheck "0.0.1"
-  :description "Core/Common code of the codcheck"
-
+  :description "Core/Common code of the codcheck platform"
+  :url "https://github.com/FieryCod/codcheck"
+  :license {:name "MIT"
+            :url "https://opensource.org/licenses/MIT"}
   :dependencies [[org.clojure/clojure "1.10.0-alpha6"]
                  [com.taoensso/timbre "4.10.0"]
                  [org.clojure/core.async "0.4.474"]
