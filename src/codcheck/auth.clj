@@ -1,16 +1,19 @@
 (ns codcheck.auth
   (:require
-   [codcheck.envs :refer [envs]]
-   [codcheck.github :as github]
+   [cheshire.core :as cheshire]
    [buddy.core.keys :as buddy-keys]
-   [clj-time.core :as clj-time]
    [buddy.sign.jwt :as jwt]
-   [clj-http.client :as client])
+   [clj-time.core :as clj-time]
+   [clj-http.client :as client]
+   [codcheck.envs :refer [envs]]
+   [codcheck.github :as github])
   (:import
    [org.apache.commons.codec.digest HmacUtils HmacAlgorithms]))
 
-(def gh-sha1-generator
-  (HmacUtils. HmacAlgorithms/HMAC_SHA_1 (:github-webhook-secret envs)))
+(def ^HmacUtils gh-sha1-generator
+  (HmacUtils.
+   ^HmacAlgorithms HmacAlgorithms/HMAC_SHA_1
+   ^String (:github-webhook-secret envs)))
 
 (def jwt-algorithm
   {:alg :rs256})
@@ -25,9 +28,9 @@
                 :iss (:github-app-identifier envs)}]
     (jwt/sign claims gh-private-key jwt-algorithm)))
 
-(defn gh-installation-token
+(defn gh-installation-token-request
   ([installation-id sign-token]
-   (gh-installation-token installation-id sign-token false))
+   (gh-installation-token-request installation-id sign-token false))
 
   ([installation-id sign-token async?]
    (let [installation-url (github/installation-token-url installation-id)
@@ -37,3 +40,7 @@
                :accept "application/vnd.github.machine-man-preview+json"
                :content-type :json}]
      (client/post installation-url opts))))
+
+(defn installation-request->token
+  [installation-request]
+  (get (cheshire/parse-string (:body installation-request) true) :token ""))

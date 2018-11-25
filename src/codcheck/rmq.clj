@@ -13,12 +13,21 @@
 (def routing-keys
   {:gh-pr-code-check ""})
 
-(def conn
-  (atom
-   (let [{:keys [rmq-user rmq-pass rmq-host]} envs]
-     (langohr/connect {:host rmq-host
-                       :username rmq-user
-                       :password rmq-pass}))))
+(def conn (atom nil))
 
-(def chan
-  (atom (langohr-chan/open @conn)))
+(def chan (atom nil))
+
+(defn connect!
+  []
+  (let [{:keys [rmq-user rmq-pass rmq-host]} envs]
+    (when (nil? @conn)
+      (reset! conn (langohr/connect {:host rmq-host
+                                     :username rmq-user
+                                     :password rmq-pass})))))
+
+(defn open-chan!
+  []
+  (when (nil? @conn)
+    (throw (Exception. "Connection does not exists")))
+  (when (nil? @chan)
+    (reset! chan (langohr-chan/open @conn))))
