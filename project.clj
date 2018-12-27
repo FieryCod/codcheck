@@ -1,4 +1,4 @@
-(defproject codcheck "0.0.4"
+(defproject codcheck "0.0.5"
 
   :description "Core/Common code of the codcheck platform"
   :url "https://github.com/FieryCod/codcheck"

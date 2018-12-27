@@ -28,7 +28,8 @@
   {:alg :rs256})
 
 (def gh-private-key
-  (or (private-key-from-pem) (buddy-keys/str->private-key (:GITHUB_PRIVATE_KEY envs))))
+  (or (do (println "Reading from pem") (private-key-from-pem))
+      (do (println "Reading from envs") (buddy-keys/str->private-key (string/replace (:GITHUB_PRIVATE_KEY envs) #"\\n" "\n")))))
 
 (defn gh-sign-token
   []
