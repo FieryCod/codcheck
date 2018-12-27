@@ -4,11 +4,20 @@
    [buddy.core.keys :as buddy-keys]
    [buddy.sign.jwt :as jwt]
    [clj-time.core :as clj-time]
+   [clojure.string :as string]
    [clj-http.client :as client]
    [codcheck.envs :refer [envs]]
    [codcheck.github :as github])
   (:import
    [org.apache.commons.codec.digest HmacUtils HmacAlgorithms]))
+
+(defn private-key-from-pem
+  []
+  (try
+    (buddy-keys/private-key "codcheck.pem")
+    (catch Exception err
+      (println "There is no codcheck.pem key")
+      nil)))
 
 (def ^HmacUtils gh-sha1-generator
   (HmacUtils.
@@ -19,7 +28,7 @@
   {:alg :rs256})
 
 (def gh-private-key
-  (buddy-keys/str->private-key (:GITHUB_PRIVATE_KEY envs)))
+  (or (private-key-from-pem) (buddy-keys/str->private-key (:GITHUB_PRIVATE_KEY envs))))
 
 (defn gh-sign-token
   []

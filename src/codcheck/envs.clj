@@ -20,3 +20,5 @@
         edn-envs (or (read-envs-from-edn) {})]
 
     (merge edn-envs system-envs)))
+
+(clojure.pprint/pprint envs)
