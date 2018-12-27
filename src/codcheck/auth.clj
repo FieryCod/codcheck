@@ -13,19 +13,19 @@
 (def ^HmacUtils gh-sha1-generator
   (HmacUtils.
    ^HmacAlgorithms HmacAlgorithms/HMAC_SHA_1
-   ^String (:github-webhook-secret envs)))
+   ^String (:GITHUB_WEBHOOK_SECRET envs)))
 
 (def jwt-algorithm
   {:alg :rs256})
 
 (def gh-private-key
-  (buddy-keys/str->private-key (:github-private-key envs)))
+  (buddy-keys/str->private-key (:GITHUB_PRIVATE_KEY envs)))
 
 (defn gh-sign-token
   []
   (let [claims {:exp (-> 10 clj-time/minutes clj-time/from-now)
                 :iat (clj-time/now)
-                :iss (:github-app-identifier envs)}]
+                :iss (:GITHUB_APP_IDENTIFIER envs)}]
     (jwt/sign claims gh-private-key jwt-algorithm)))
 
 (defn gh-installation-token-request
