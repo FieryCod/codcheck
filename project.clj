@@ -1,4 +1,4 @@
-(defproject codcheck "0.0.1"
+(defproject codcheck "0.0.2"
 
   :description "Core/Common code of the codcheck platform"
   :url "https://github.com/FieryCod/codcheck"
@@ -8,7 +8,7 @@
 
   :global-vars {*warn-on-reflection* true}
 
-  :dependencies [[org.clojure/clojure "1.10.0-beta8"]
+  :dependencies [[org.clojure/clojure "1.10.0"]
                  [com.taoensso/timbre "4.10.0"]
                  [org.clojure/core.async "0.4.474"]
                  [clj-time "0.14.4"]

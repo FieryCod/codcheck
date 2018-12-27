@@ -5,13 +5,16 @@
    [codcheck.envs :refer [envs]]))
 
 (def exchanges
-  {:gh-pr-code-check "gh_pr_code_check_ex"})
+  {:pr-code-check "pr_code_check_ex"
+   :pr-code-checked "pr_code_checked_ex"})
 
 (def queues
-  {:gh-pr-code-check "gh_pr_code_check_q"})
+  {:pr-code-check "pr_code_check_q"
+   :pr-code-checked "pr_code_checked_q"})
 
 (def routing-keys
-  {:gh-pr-code-check ""})
+  {:pr-code-check ""
+   :pr-code-checked ""})
 
 (def conn (atom nil))
 
@@ -28,6 +31,6 @@
 (defn open-chan!
   []
   (when (nil? @conn)
-    (throw (Exception. "Connection does not exists")))
+    (throw (Exception. "Connection for RabbitMQ does not exists. @Codcheck")))
   (when (nil? @chan)
     (reset! chan (langohr-chan/open @conn))))
