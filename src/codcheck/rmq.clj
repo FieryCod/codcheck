@@ -22,11 +22,10 @@
 
 (defn connect!
   []
-  (let [{:keys [rmq-user rmq-pass rmq-host]} envs]
-    (when (nil? @conn)
-      (reset! conn (langohr/connect {:host rmq-host
-                                     :username rmq-user
-                                     :password rmq-pass})))))
+  (when (nil? @conn)
+    (reset! conn (langohr/connect {:host (:RMQ_HOST envs)
+                                   :username (:RMQ_USER rmq-user)
+                                   :password (:RMQ_PASS rmq-pass)}))))
 
 (defn open-chan!
   []
