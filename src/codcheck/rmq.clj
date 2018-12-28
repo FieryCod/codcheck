@@ -24,8 +24,9 @@
   []
   (when (nil? @conn)
     (reset! conn (langohr/connect {:host (:RMQ_HOST envs)
-                                   :username (:RMQ_USER rmq-user)
-                                   :password (:RMQ_PASS rmq-pass)}))))
+                                   :username (:RMQ_USER envs)
+                                   :password (:RMQ_PASS envs)}))))
+
 
 (defn open-chan!
   []
